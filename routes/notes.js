@@ -43,9 +43,15 @@ function getNoteFromDB(id) {
   });
 }
 
-router.get("/async-notes/:id", async (req, res) => {
-  const note = await getNoteFromDB(req.params.id);
-  res.json(note);
+router.get("/async-notes/:id", async (req, res, next) => {
+  try {
+    const note = await getNoteFromDB(req.params.id);
+    //await notes.find({id:1});
+    res.json(note);
+  } catch (err) {
+    err.status = 404;
+    next(err)
+  }
 });
 
 export default router;
